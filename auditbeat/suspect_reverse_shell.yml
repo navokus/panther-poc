@@ -1,0 +1,52 @@
+AnalysisType: rule
+Description: Identifies suspicious commands executed via python, perl, php, ruby, openssl, lua  which may suggest a revershell  and remote shell access.
+DisplayName: Suspect Reverse Shell
+Enabled: true
+Filename: suspect_reverse_shell.py
+Reference: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md
+Reports:
+    MITRE ATT&CK:
+        - TA0002:T1059
+Severity: High
+Tags:
+    - Elastic
+    - Execution
+    - Host
+    - Linux
+    - Threat Detection
+Tests:
+    - ExpectedResult: true
+      Log:
+        event:
+            category: process
+            type: start
+        process:
+            args: aaaaagetprotobynameaaaasockaddr_inaaaaaaaa
+            name: perl
+      Name: Test-Suspect.Reverse.Shell-Perl
+    - ExpectedResult: true
+      Log:
+        event:
+            category: process
+            type: process_started
+        process:
+            args: fsockopen
+            name: php3
+      Name: Test-Suspect.Reverse.Shell-PHP
+    - ExpectedResult: true
+      Log:
+        event:
+            category: process
+            type: start
+        process:
+            args: abcsocketabcconnectabc
+            name: python3
+      Name: Test-Suspect.Reverse.Shell-Python
+DedupPeriodMinutes: 60
+LogTypes:
+    - Custom.Auditbeat.System
+    - Custom.AuditbeatFromLogstash
+OutputIds:
+    - a41babe6-dc97-4663-8601-f5cb0bc44470
+RuleID: Suspect.Reverse.Shell
+Threshold: 1
